@@ -37,7 +37,7 @@ bool ExampleGame::Init()
 	srand(static_cast<unsigned int>(time(0)));
 	for (int j = 0; j<100; j++)
 	{
-		DebugCube *cube = new DebugCube(glm::vec3(rand()%100, 0, rand()%100), glm::vec3((rand()%20 + 10)*0.1f, (rand()%20+ 10)*0.1f, (rand()%20+ 10)*0.1f));
+		DebugCube *cube = new DebugCube(Scene::Instance()->GetCurrentNodeID(), glm::vec3(rand()%100, 0, rand()%100), glm::vec3((rand()%20 + 10)*0.1f, (rand()%20+ 10)*0.1f, (rand()%20+ 10)*0.1f));
 		Scene::Instance()->AddTopNode(cube);
 	}
 

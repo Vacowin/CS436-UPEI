@@ -5,6 +5,7 @@
 #define HEIGHT_QUAD 100
 
 Scene* Scene::s_pSceneInstance = NULL;
+int Scene::s_iNodeIndex = 0;
 
 void Scene::CreateInstance()
 {
@@ -49,9 +50,23 @@ void Scene::AddTopNode(Node *p_pNode)
 {
 	m_pQuadTree->AddNode (p_pNode);
 	m_lTopNode.push_back(p_pNode);
+	s_iNodeIndex++;
 }
 
-void Scene::mouse_motion( int x, int y )
+void Scene::RemoveNode(int p_iID)
+{
+	std::vector<Node*>::iterator it;
+	for(it = m_lTopNode.begin(); it != m_lTopNode.end(); ++it) 
+	{
+		if (static_cast<Node*>(*it)->GetID() == p_iID)
+			break;
+	}
+	if (it != m_lTopNode.end())
+		m_lTopNode.erase(it);
+	
+}
+
+void Scene::MouseMotion( int x, int y )
 {
 	double deltaX = x - mouse.x;
 	double deltaY = y - mouse.y;
@@ -69,7 +84,7 @@ void Scene::Update(float p_fDelta)
 	glfwGetMousePos(&mouseX, &mouseY);
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS )
 	{
-		mouse_motion(mouseX, mouseY);
+		MouseMotion(mouseX, mouseY);
 	}
 	else
 	{
@@ -148,11 +163,7 @@ void Scene::Render()
 	for (int i=0;i<m_lRenderNode.size();i++)
 	{
 		Node *node = m_lRenderNode.at(i);
-		Material *material = node->GetMaterial();
-
-		material->SetUniform("projection", projectionMatrix);
-		material->SetUniform("view", viewMatrix);
-		node->Render();
+		node->Render(viewMatrix,projectionMatrix);
 	}
 
 	if (m_bDrawQuadLines)

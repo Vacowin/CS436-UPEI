@@ -74,7 +74,7 @@ void QuadTree::AddNode( Node *p_pNode )
 	}
 	
 	//  check stop critiria  
-	if (StopCritiria())
+	if (!StopCritiria())
 	{
 		m_pNWTree = new QuadTree( m_fX, m_fZ, m_fWidth / 2.0f, m_fHeight / 2.0f, m_iLevel+1 );
 		m_pNETree = new QuadTree( m_fX + m_fWidth / 2.0f, m_fZ, m_fWidth / 2.0f, m_fHeight / 2.0f, m_iLevel+1 );
@@ -135,7 +135,7 @@ bool QuadTree::Contains( QuadTree *p_pChildTree, Node *p_pNode )
 
 bool QuadTree::StopCritiria()
 {
-	return m_lNodes.size()>3;
+	return (m_lNodes.size()<3) || (m_iLevel > 10);
 }
 
 void QuadTree::Render(glm::mat4 mProj, glm::mat4 mView)

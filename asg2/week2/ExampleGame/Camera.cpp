@@ -135,11 +135,11 @@ const glm::mat4& Camera::GetProjectionMatrix() const
 
 const glm::mat4& Camera::GetViewMatrix() const
 {
-	//if (m_bViewDirty)
-	//{
+	if (m_bViewDirty)
+	{
 		m_mViewMatrix = glm::lookAt(m_vPos, m_vTarget, m_vUp);
-		//m_bViewDirty = false;
-	//}
+		m_bViewDirty = false;
+	}
 	return m_mViewMatrix;
 }
 
@@ -155,11 +155,13 @@ void Camera::rotateHorizontal(double amt)
 		else
 			theta = PI_OVER2;
 	}
+	m_bViewDirty = true;
 }
 
 void Camera::rotateVertical(double amt)
 {
 	phi += amt;
+	m_bViewDirty = true;
 }
 
 void Camera::moveLeftRight(double amt)
@@ -178,6 +180,7 @@ void Camera::moveLeftRight(double amt)
 	glm::vec3 moveVec = glm::vec3(x,0,y);
 	m_vPos = m_vPos + moveVec;
 	m_vTarget = m_vTarget + moveVec;
+	m_bViewDirty = true;
 }
 
 void Camera::moveForward(double amt)
@@ -187,6 +190,7 @@ void Camera::moveForward(double amt)
 	glm::vec3 direction = temp;
 	m_vTarget = m_vTarget + direction;
 	m_vPos = m_vPos + direction;
+	m_bViewDirty = true;
 }
 
 void Camera::calculateCameraRotation()
@@ -208,8 +212,3 @@ void Camera::Update(float p_fDelta)
 {
 	m_pFrustum->setCamDef(m_vPos, m_vTarget, m_vUp);
 }
-
-//int Camera::CheckFrustum(Node* p_pNode)
-//{
-//	return m_pFrustum->sphereInFrustum(p_pNode->GetWorldTranslation(), p_pNode->GetBVRadius());
-//}

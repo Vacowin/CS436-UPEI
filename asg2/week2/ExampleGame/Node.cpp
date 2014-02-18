@@ -1,13 +1,26 @@
 #include "Node.h"
 
 
-Node::Node(const glm::vec3 &p_vPos)
+Node::Node(int p_iID, const glm::vec3 &p_vPos)
 {
+	m_iID = p_iID;
 	SetTranslation(p_vPos);
 	m_pParent = NULL;
 	m_lChildren = vector<Node*>();
 }
 
+void Node::RemoveNode(int p_iID)
+{
+	std::vector<Node*>::iterator it;
+	for(it = m_lChildren.begin(); it != m_lChildren.end(); ++it) 
+	{
+		if (static_cast<Node*>(*it)->GetID() == p_iID)
+			break;
+	}
+	if (it != m_lChildren.end())
+		m_lChildren.erase(it);
+	
+}
 
 const glm::vec3 Node::GetWorldTranslation()
 {

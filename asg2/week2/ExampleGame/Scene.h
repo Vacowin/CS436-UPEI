@@ -13,15 +13,18 @@ public:
 	static void DestroyInstance();
 	static Scene* Instance();
 
+	static int GetCurrentNodeID() { return s_iNodeIndex;}
+
 	void Update(float p_fDelta);
 	void Render();
 
 	void SetActiveCamera(Camera *p_pCamera);
 
 	void AddTopNode(Node *p_pNode);
+	void RemoveNode(int p_iID);
 	void DoCulling(QuadTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes);
 
-	void mouse_motion( int x, int y);
+	void MouseMotion( int x, int y);
 private:
 	Scene();
 	~Scene();
@@ -37,6 +40,8 @@ private:
 	glm::vec2 mouse;
 	bool m_bToggleQuadLines;
 	bool m_bDrawQuadLines;
+
+	static int s_iNodeIndex;
 };
 
 #endif

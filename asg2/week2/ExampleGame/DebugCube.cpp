@@ -2,7 +2,7 @@
 #include <ctime>
 
 
-DebugCube::DebugCube(const glm::vec3 &p_vPos, glm::vec3 p_vDim) : Node(p_vPos)
+DebugCube::DebugCube(int p_iID, const glm::vec3 &p_vPos, glm::vec3 p_vDim) : Node(p_iID, p_vPos)
 {
 	m_fBVRadius = glm::length(p_vDim*0.5f);
 
@@ -61,7 +61,6 @@ DebugCube::DebugCube(const glm::vec3 &p_vPos, glm::vec3 p_vDim) : Node(p_vPos)
 	};
 
 
-	//g_pProgram = wolf::ProgramManager::CreateProgram("data/cube.vsh", "data/cube.fsh");
 	wolf::VertexBuffer* pVB = wolf::BufferManager::CreateVertexBuffer(cubeVertices, sizeof(Vertex) * 6 * 3 * 2);
 
 	m_pDecl = new wolf::VertexDeclaration();
@@ -70,26 +69,24 @@ DebugCube::DebugCube(const glm::vec3 &p_vPos, glm::vec3 p_vDim) : Node(p_vPos)
 	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
 	m_pDecl->SetVertexBuffer(pVB);
 	m_pDecl->End();
-
+	
 	long double ran1 = rand();
 	long double ran2 = rand();
-	m_pMaterial = wolf::MaterialManager::CreateMaterial(std::to_string(ran1)+std::to_string(ran2));
+	m_pMaterial = wolf::MaterialManager::CreateMaterial(std::to_string((long double)m_iID));
 	m_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
 
 }
 
-//void DebugCube::Update(float p_fDelta)
-//{
-//	//float aa = glm::length(GetScale());
-//}
 
-void DebugCube::Render()
+void DebugCube::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 {
 	glm::mat4 mWorld = glm::mat4(glm::translate(GetWorldTranslation()));
 
 	m_pDecl->Bind();
 
     m_pMaterial->SetUniform("world", mWorld);
+	m_pMaterial->SetUniform("projection", p_mProj);
+	m_pMaterial->SetUniform("view", p_mView);
 
 	m_pMaterial->Apply();
 
@@ -100,6 +97,6 @@ void DebugCube::Render()
 	for (int i=0;i<m_lChildren.size();i++)
 	{
 		Node *node = m_lChildren.at(i);
-		node->Render();
+		node->Render(p_mView, p_mProj);
 	}
 }

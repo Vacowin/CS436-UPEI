@@ -20,12 +20,13 @@ class Node
 {
 public:
 	//Node(string p_name);
-	Node(const glm::vec3 &p_vPos);
+	Node(int p_iID,const glm::vec3 &p_vPos);
 
+	int GetID() { return m_iID;}
 	void AddChildNode(Node *p_pNode) {m_lChildren.push_back(p_pNode); p_pNode->SetParent(this);}
+	void RemoveNode(int p_iID);
 	void SetParent(Node *p_pParent) {m_pParent = p_pParent;}
 	void SetBVRadius(float p_fRadius) {m_fBVRadius = p_fRadius;}
-	void SetMaterial(Material *p_pMaterial) {m_pMaterial = p_pMaterial;}
 	
 	float GetBVRadius() { return m_fBVRadius;}
 
@@ -51,17 +52,16 @@ public:
 	const glm::mat4 GetWorldTransform();
 	const glm::mat4 GetTransform() { return m_Transform.GetTransformation(); }
 
-	Material* GetMaterial() { return m_pMaterial;}
 
 	virtual void Update(float p_fDelta);
-	virtual void Render(){};
+	virtual void Render(const glm::mat4& p_mView, const glm::mat4& p_mProj){};
 protected:
 	vector<Node*> m_lChildren;
 	Node *m_pParent;
 	//string m_sName;
+	int m_iID;
 	Transform m_Transform; 
 	
-	Material *m_pMaterial;
 	float m_fBVRadius;
 };
 
