@@ -31,8 +31,9 @@ ExampleGame::~ExampleGame()
 bool ExampleGame::Init()
 {
 	Scene::CreateInstance();
-	Camera *pCamera = new Camera(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 30.0f, 10.0f), glm::vec3(1.0f,1.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
-	Scene::Instance()->SetActiveCamera(pCamera);
+	//Camera *pCamera1 = new Camera(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 30.0f, 10.0f), glm::vec3(1.0f,1.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+	//pCamera2 = new Camera(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 30.0f, 10.0f), glm::vec3(1.0f,1.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+	//Scene::Instance()->SetActiveCamera(pCamera1);
 
 	srand(static_cast<unsigned int>(time(0)));
 	for (int j = 0; j<100; j++)

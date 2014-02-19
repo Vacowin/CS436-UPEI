@@ -33,6 +33,10 @@ private:
 	std::vector<Node*> m_lTopNode;
 	std::vector<Node*> m_lRenderNode;
 	Camera *m_pCamera;
+	Camera *m_pCamera1;
+	Camera *m_pCamera2;
+	bool m_bIsCamera1;
+	bool m_bToggleCamera;
 	QuadTree* m_pQuadTree;
 
 	int mouseX ;
@@ -42,6 +46,7 @@ private:
 	bool m_bDrawQuadLines;
 
 	static int s_iNodeIndex;
+
 };
 
 #endif

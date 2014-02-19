@@ -138,7 +138,7 @@ bool QuadTree::StopCritiria()
 	return (m_lNodes.size()<3) || (m_iLevel > 10);
 }
 
-void QuadTree::Render(glm::mat4 mProj, glm::mat4 mView)
+void QuadTree::Render(const glm::mat4& mProj, const glm::mat4& mView)
 {
 	// Draw lines
 	glm::mat4 mWorld = glm::mat4(glm::translate(0,0,0));

@@ -3,6 +3,9 @@
 
 #include "Plane.h"
 #include "QuadTree.h"
+#include "W_Common.h"
+#include "W_BufferManager.h"
+#include "W_VertexDeclaration.h"
 
 class Frustum
 {
@@ -28,7 +31,7 @@ public:
 	float nearD, farD, ratio, angle,tang;
 	float nw,nh,fw,fh;
 
-	Frustum(){};
+	Frustum();
 	~Frustum(){};
 
 	void setCamInternals(float angle, float ratio, float nearD, float farD);
@@ -36,6 +39,12 @@ public:
 	int pointInFrustum(vec3 &p);
 	int sphereInFrustum(const vec3 &p, float raio);
 	int QuadTreeInFrustum(QuadTree *p_pQuadTree);
+
+	void Frustum::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj);
+
+	wolf::VertexDeclaration* m_pDecl ;
+	wolf::VertexBuffer* m_pVB;
+	Material *m_pMaterial;
 };
 
 

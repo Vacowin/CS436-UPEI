@@ -3,6 +3,12 @@
 
 #define ANG2RAD 3.141592653589/180.0
 
+Frustum::Frustum()
+{
+	m_pDecl = NULL;
+	m_pVB = NULL;
+	m_pMaterial = NULL;
+}
 
 void Frustum::setCamInternals(float angle, float ratio, float nearD, float farD)
 {
@@ -16,6 +22,8 @@ void Frustum::setCamInternals(float angle, float ratio, float nearD, float farD)
 	nw = nh * ratio; 
 	fh = farD  * tang;
 	fw = fh * ratio;
+
+	
 }
 
 
@@ -52,6 +60,68 @@ void Frustum::setCamDef(vec3 &p, vec3 &l, vec3 &u)
 	pl[RIGHT].set3Points(nbr,ntr,fbr);
 	pl[NEARP].set3Points(ntl,ntr,nbr);
 	pl[FARP].set3Points(ftr,ftl,fbl);
+
+	Vertex cubeVertices[] = {
+	// Far Plane
+		{ fbl.x, fbl.y, fbl.z, 255, 255, 255, 70 },
+		{ ftl.x, ftl.y, ftl.z, 255, 255, 255, 70 },
+		{ ftr.x, ftr.y, ftr.z, 255, 255, 255, 70 },
+		{ ftr.x, ftr.y, ftr.z, 255, 255, 255, 70 },
+		{ fbr.x, fbr.y, fbr.z, 255, 255, 255, 70 },
+		{ fbl.x, fbl.y, fbl.z, 255, 255, 255, 70 },
+
+	// Top Plane
+		{ ntl.x, ntl.y, ntl.z, 0, 255, 255, 70 },
+		{ ftl.x, ftl.y, ftl.z, 0, 255, 255, 70 },
+		{ ftr.x, ftr.y, ftr.z, 0, 255, 255, 70 },
+		{ ftr.x, ftr.y, ftr.z, 0, 255, 255, 70 },
+		{ ntr.x, ntr.y, ntr.z, 0, 255, 255, 70 },
+		{ ntl.x, ntl.y, ntl.z, 0, 255, 255, 70 },
+
+	// Bottom Plane
+		{ nbl.x, nbl.y, nbl.z, 0, 255, 0, 70 },
+		{ fbl.x, fbl.y, fbl.z, 0, 255, 0, 70 },
+		{ fbr.x, fbr.y, fbr.z, 0, 255, 0, 70 },
+		{ fbr.x, fbr.y, fbr.z, 0, 255, 0, 70 },
+		{ nbr.x, nbr.y, nbr.z, 0, 255, 0, 70 },
+		{ nbl.x, nbl.y, nbl.z, 0, 255, 0, 70 },
+
+	// Left Plane
+		{ nbl.x, nbl.y, nbl.z, 0, 0, 255, 70 },
+		{ fbl.x, fbl.y, fbl.z, 0, 0, 255, 70 },
+		{ ftl.x, ftl.y, ftl.z, 0, 0, 255, 70 },
+		{ ftl.x, ftl.y, ftl.z, 0, 0, 255, 70 },
+		{ ntl.x, ntl.y, ntl.z, 0, 0, 255, 70 },
+		{ nbl.x, nbl.y, nbl.z, 0, 0, 255, 70 },
+
+	// Right Plane
+		{ nbr.x, nbr.y, nbr.z, 255, 255, 0, 70 },
+		{ fbr.x, fbr.y, fbr.z, 255, 255, 0, 70 },
+		{ ftr.x, ftr.y, ftr.z, 255, 255, 0, 70 },
+		{ ftr.x, ftr.y, ftr.z, 255, 255, 0, 70 },
+		{ ntr.x, ntr.y, ntr.z, 255, 255, 0, 70 },
+		{ nbr.x, nbr.y, nbr.z, 255, 255, 0, 70 },};
+
+	if (m_pVB) 
+		wolf::BufferManager::DestroyBuffer(m_pVB);
+	m_pVB = wolf::BufferManager::CreateVertexBuffer(cubeVertices, sizeof(Vertex)*5 *3 * 2);
+
+	if (m_pDecl)
+		delete m_pDecl;
+	m_pDecl = new wolf::VertexDeclaration();
+	m_pDecl->Begin();
+	m_pDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
+	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+	m_pDecl->SetVertexBuffer(m_pVB);
+	m_pDecl->End();
+
+	if (!m_pMaterial)
+	{
+		m_pMaterial = wolf::MaterialManager::CreateMaterial("vcn");
+		m_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
+		m_pMaterial->SetBlendMode(BlendMode::BM_SrcAlpha, BlendMode::BM_OneMinusSrcAlpha);
+		m_pMaterial->SetBlend(true);
+	}
 }
 
 
@@ -97,4 +167,20 @@ int Frustum::QuadTreeInFrustum(QuadTree *p_pQuadTree)
 	}
 	return(result);
 
+}
+
+void Frustum::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
+{
+	glm::mat4 mWorld = glm::mat4(glm::translate(0.0f,0.0f,0.0f));
+	//printf("%f,%f,%f  %f,%f,%f  %f,%f,%f  %f,%f,%f\n",ftl.x,ftl.y,ftl.z,ftr.x,ftr.y,ftr.z,fbl.x,fbl.y,fbl.z,fbr.x,fbr.y,fbr.z);
+	m_pDecl->Bind();
+
+    m_pMaterial->SetUniform("world", mWorld);
+	m_pMaterial->SetUniform("projection", p_mProj);
+	m_pMaterial->SetUniform("view", p_mView);
+
+	m_pMaterial->Apply();
+
+    // Draw 5 Planes
+	glDrawArrays(GL_TRIANGLES, 0, 5* 6);
 }

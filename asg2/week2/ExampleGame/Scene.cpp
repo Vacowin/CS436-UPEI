@@ -35,6 +35,12 @@ Scene::Scene()
 
 	m_bToggleQuadLines = true;
 	m_bDrawQuadLines = true;
+	m_bIsCamera1 = true;
+	m_bToggleCamera = true;
+
+	m_pCamera1 = new Camera(45.0f, 1280.0f / 720.0f, 0.1f, 200.0f, glm::vec3(0.0f, 30.0f, 10.0f), glm::vec3(1.0f,1.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+	m_pCamera2 = new Camera(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 30.0f, 10.0f), glm::vec3(1.0f,1.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+	SetActiveCamera(m_pCamera1);
 }
 
 Scene::~Scene()
@@ -80,7 +86,6 @@ void Scene::MouseMotion( int x, int y )
 
 void Scene::Update(float p_fDelta)
 {
-
 	glfwGetMousePos(&mouseX, &mouseY);
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS )
 	{
@@ -93,17 +98,32 @@ void Scene::Update(float p_fDelta)
 	}
 
 	if( glfwGetKey( 'W' ) == GLFW_PRESS )
-		m_pCamera->moveForward(0.05);
+		m_pCamera->moveForward(0.07);
 	else if( glfwGetKey( 'S' ) == GLFW_PRESS )
-		m_pCamera->moveForward(-0.05);
+		m_pCamera->moveForward(-0.07);
 	if ( glfwGetKey( 'A' ) == GLFW_PRESS )
-		m_pCamera->moveLeftRight(- 0.2);
+		m_pCamera->moveLeftRight(- 0.5);
 	else if ( glfwGetKey( 'D' ) == GLFW_PRESS )
-		m_pCamera->moveLeftRight(0.2);
+		m_pCamera->moveLeftRight(0.5);
 
 	m_pCamera->calculateCameraRotation();
 	m_pCamera->Update(p_fDelta);
 
+	if (!m_bIsCamera1)
+	{
+		if( glfwGetKey( GLFW_KEY_UP ) == GLFW_PRESS )
+			m_pCamera1->moveForward(0.07);
+		else if( glfwGetKey( GLFW_KEY_DOWN ) == GLFW_PRESS )
+			m_pCamera1->moveForward(-0.07);
+		if ( glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS )
+			m_pCamera1->moveLeftRight(- 0.5);
+		else if ( glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS )
+			m_pCamera1->moveLeftRight(0.5);
+
+		m_pCamera1->Update(p_fDelta);
+	}
+
+	// Turn on/off Quad Lines
 	if (glfwGetKey('X') == GLFW_PRESS && !m_bToggleQuadLines)
     {
 		m_bDrawQuadLines = !m_bDrawQuadLines;
@@ -111,6 +131,25 @@ void Scene::Update(float p_fDelta)
     }
     else if (glfwGetKey('X') == GLFW_RELEASE)
         m_bToggleQuadLines = false;
+
+	// Switch Cameras
+	if( glfwGetKey( 'M' ) == GLFW_PRESS && !m_bToggleCamera)
+	{
+		if (m_bIsCamera1)
+		{
+			Scene::Instance()->SetActiveCamera(m_pCamera2);
+			m_bIsCamera1 = false;
+		}
+		else
+		{
+			Scene::Instance()->SetActiveCamera(m_pCamera1);
+			m_bIsCamera1 = true;
+		}
+		m_bToggleCamera = true;
+	}
+	else if (glfwGetKey('M') == GLFW_RELEASE)
+        m_bToggleCamera = false;
+
 
 
 	// Update nodes
@@ -122,7 +161,7 @@ void Scene::Update(float p_fDelta)
 	
 	// Culling
 	m_lRenderNode.clear();
-	DoCulling(m_pQuadTree, m_pCamera->GetFrustum(), m_lRenderNode);
+	DoCulling(m_pQuadTree, m_pCamera1->GetFrustum(), m_lRenderNode);
 
 	printf("\nNode: %d", m_lRenderNode.size());
 }
@@ -168,4 +207,12 @@ void Scene::Render()
 
 	if (m_bDrawQuadLines)
 		m_pQuadTree->Render(projectionMatrix, viewMatrix);
+
+	// Draw Fustum if using 2nd camera
+	if (!m_bIsCamera1)
+	{
+		glm::mat4 projectionMatrix1 = m_pCamera1->GetProjectionMatrix();
+		glm::mat4 viewMatrix1 = m_pCamera1->GetViewMatrix();
+		m_pCamera1->GetFrustum()->Render(viewMatrix, projectionMatrix);
+	}
 }

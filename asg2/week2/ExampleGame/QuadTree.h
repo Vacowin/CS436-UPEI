@@ -30,7 +30,7 @@ public:
 	std::vector<Node*> GetNodes() { return m_lNodes;}
 	AABB* GetAABB() { return m_pAABB;}
 
-	void Render(glm::mat4 mProj, glm::mat4 mView);
+	void Render(const glm::mat4& mProj, const glm::mat4& mView);
 
 private:
 	float m_fX;
