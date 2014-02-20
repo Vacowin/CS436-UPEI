@@ -106,6 +106,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Octree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wolf">
@@ -244,5 +245,6 @@
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Octree.h" />
   </ItemGroup>
 </Project>

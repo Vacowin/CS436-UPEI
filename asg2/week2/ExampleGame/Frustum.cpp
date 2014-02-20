@@ -169,6 +169,21 @@ int Frustum::QuadTreeInFrustum(QuadTree *p_pQuadTree)
 
 }
 
+int Frustum::OcTreeInFrustum(OcTree *p_pOcTree)
+{
+	AABB *aabb = p_pOcTree->GetAABB();
+
+	int result = INSIDE;
+	for(int i=0; i < 6; i++) {
+
+		if (pl[i].distance(aabb->getVertexP(pl[i].normal)) < 0)
+			return OUTSIDE;
+		else if (pl[i].distance(aabb->getVertexN(pl[i].normal)) < 0)
+			result =  INTERSECT;
+	}
+	return(result);
+}
+
 void Frustum::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 {
 	glm::mat4 mWorld = glm::mat4(glm::translate(0.0f,0.0f,0.0f));

@@ -3,6 +3,7 @@
 #define MOUSE_SENSITIVITY 0.001
 #define WIDTH_QUAD 100
 #define HEIGHT_QUAD 100
+#define DEPTH_QUAD 100
 
 Scene* Scene::s_pSceneInstance = NULL;
 int Scene::s_iNodeIndex = 0;
@@ -32,6 +33,7 @@ Scene::Scene()
 {
 	m_lTopNode = std::vector<Node*>();
 	m_pQuadTree = new QuadTree(0, 0, WIDTH_QUAD, HEIGHT_QUAD, 0);
+	m_pOcTree = new OcTree(0, 0, 0, WIDTH_QUAD, HEIGHT_QUAD, DEPTH_QUAD, 0);
 
 	m_bToggleQuadLines = true;
 	m_bDrawQuadLines = true;
@@ -54,7 +56,15 @@ void Scene::SetActiveCamera(Camera *p_pCamera)
 
 void Scene::AddTopNode(Node *p_pNode)
 {
-	m_pQuadTree->AddNode (p_pNode);
+	if (!m_bRenderOctree)
+	{
+		glm::vec3 pos = p_pNode->GetTranslation();
+		p_pNode->SetTranslation(glm::vec3(pos.x, 0, pos.y));
+		m_pQuadTree->AddNode (p_pNode);
+	}
+	else
+		m_pOcTree->AddNode(p_pNode);
+
 	m_lTopNode.push_back(p_pNode);
 	s_iNodeIndex++;
 }
@@ -98,13 +108,13 @@ void Scene::Update(float p_fDelta)
 	}
 
 	if( glfwGetKey( 'W' ) == GLFW_PRESS )
-		m_pCamera->moveForward(0.07);
+		m_pCamera->moveForward(0.1);
 	else if( glfwGetKey( 'S' ) == GLFW_PRESS )
-		m_pCamera->moveForward(-0.07);
+		m_pCamera->moveForward(-0.1);
 	if ( glfwGetKey( 'A' ) == GLFW_PRESS )
-		m_pCamera->moveLeftRight(- 0.5);
+		m_pCamera->moveLeftRight(- 0.7);
 	else if ( glfwGetKey( 'D' ) == GLFW_PRESS )
-		m_pCamera->moveLeftRight(0.5);
+		m_pCamera->moveLeftRight(0.7);
 
 	m_pCamera->calculateCameraRotation();
 	m_pCamera->Update(p_fDelta);
@@ -112,13 +122,13 @@ void Scene::Update(float p_fDelta)
 	if (!m_bIsCamera1)
 	{
 		if( glfwGetKey( GLFW_KEY_UP ) == GLFW_PRESS )
-			m_pCamera1->moveForward(0.07);
+			m_pCamera1->moveForward(0.1);
 		else if( glfwGetKey( GLFW_KEY_DOWN ) == GLFW_PRESS )
-			m_pCamera1->moveForward(-0.07);
+			m_pCamera1->moveForward(-0.1);
 		if ( glfwGetKey( GLFW_KEY_LEFT ) == GLFW_PRESS )
-			m_pCamera1->moveLeftRight(- 0.5);
+			m_pCamera1->moveLeftRight(- 0.7);
 		else if ( glfwGetKey( GLFW_KEY_RIGHT ) == GLFW_PRESS )
-			m_pCamera1->moveLeftRight(0.5);
+			m_pCamera1->moveLeftRight(0.7);
 
 		m_pCamera1->Update(p_fDelta);
 	}
@@ -163,7 +173,13 @@ void Scene::Update(float p_fDelta)
 	m_lRenderNode.clear();
 	DoCulling(m_pQuadTree, m_pCamera1->GetFrustum(), m_lRenderNode);
 
-	printf("\nNode: %d", m_lRenderNode.size());
+	m_lRenderNodeOctree.clear();
+	OctreeCulling(m_pOcTree, m_pCamera1->GetFrustum(), m_lRenderNodeOctree); 
+
+	if (m_bRenderOctree)
+		printf("\nNode: %d    %d", m_lRenderNodeOctree.size());
+	else
+		printf("\nNode: %d    %d", m_lRenderNode.size());
 }
 
 
@@ -194,19 +210,58 @@ void Scene::DoCulling(QuadTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> 
 	}
 }
 
+void Scene::OctreeCulling(OcTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes)
+{
+	if (p_Frustum->OcTreeInFrustum(p_pTree) == Frustum::OUTSIDE)
+	{
+		return;
+	}
+	else
+	{
+		std::vector<Node*> lNodes = p_pTree->GetNodes();
+		for (int i=0;i<lNodes.size(); i++)
+		{
+			Node *node = lNodes.at(i);
+			if (p_Frustum->sphereInFrustum(node->GetWorldTranslation(), node->GetBVRadius()) != Frustum::OUTSIDE)
+				m_lRenderNodeOctree.push_back(node);
+		}
+
+		for (int i = 0; i < p_pTree->GetChildren().size(); i++)
+		{
+			OctreeCulling(&p_pTree->GetChildren().at(i), p_Frustum, m_lRenderNodeOctree);
+		}
+	}
+}
+
 void Scene::Render()
 {
 	glm::mat4 projectionMatrix = m_pCamera->GetProjectionMatrix();
 	glm::mat4 viewMatrix = m_pCamera->GetViewMatrix();
 
-	for (int i=0;i<m_lRenderNode.size();i++)
+	if (!m_bRenderOctree)
 	{
-		Node *node = m_lRenderNode.at(i);
-		node->Render(viewMatrix,projectionMatrix);
+		for (int i=0;i<m_lRenderNode.size();i++)
+		{
+			Node *node = m_lRenderNode.at(i);
+			node->Render(viewMatrix,projectionMatrix);
+		}
+	}
+	else
+	{
+		for (int i=0;i<m_lRenderNodeOctree.size();i++)
+		{
+			Node *node = m_lRenderNodeOctree.at(i);
+			node->Render(viewMatrix,projectionMatrix);
+		}
 	}
 
 	if (m_bDrawQuadLines)
-		m_pQuadTree->Render(projectionMatrix, viewMatrix);
+	{
+		if (!m_bRenderOctree)
+			m_pQuadTree->Render(projectionMatrix, viewMatrix);
+		else
+			m_pOcTree->Render(projectionMatrix, viewMatrix);
+	}
 
 	// Draw Fustum if using 2nd camera
 	if (!m_bIsCamera1)

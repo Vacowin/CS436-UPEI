@@ -5,6 +5,7 @@
 #include <vector>
 #include "Camera.h"
 #include "QuadTree.h"
+#include "Octree.h"
 
 class Scene
 {
@@ -23,8 +24,11 @@ public:
 	void AddTopNode(Node *p_pNode);
 	void RemoveNode(int p_iID);
 	void DoCulling(QuadTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes);
+	void OctreeCulling(OcTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes);
 
 	void MouseMotion( int x, int y);
+
+	void SetRenderOctree(bool value) { m_bRenderOctree = value;};
 private:
 	Scene();
 	~Scene();
@@ -32,6 +36,7 @@ private:
 
 	std::vector<Node*> m_lTopNode;
 	std::vector<Node*> m_lRenderNode;
+	std::vector<Node*> m_lRenderNodeOctree;
 	Camera *m_pCamera;
 	Camera *m_pCamera1;
 	Camera *m_pCamera2;
@@ -47,6 +52,8 @@ private:
 
 	static int s_iNodeIndex;
 
+	OcTree* m_pOcTree;
+	bool m_bRenderOctree;
 };
 
 #endif

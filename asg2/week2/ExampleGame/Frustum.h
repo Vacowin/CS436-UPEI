@@ -6,6 +6,7 @@
 #include "W_Common.h"
 #include "W_BufferManager.h"
 #include "W_VertexDeclaration.h"
+#include "Octree.h"
 
 class Frustum
 {
@@ -39,6 +40,7 @@ public:
 	int pointInFrustum(vec3 &p);
 	int sphereInFrustum(const vec3 &p, float raio);
 	int QuadTreeInFrustum(QuadTree *p_pQuadTree);
+	int OcTreeInFrustum(OcTree *p_pOcTree);
 
 	void Frustum::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj);
 
