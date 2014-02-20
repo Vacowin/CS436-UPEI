@@ -63,14 +63,10 @@ private:
 	glm::vec3 m_vTarget;
 	glm::vec3 m_vUp;
 
-	// Optimization; prevent calculating view/projection unless properties change
 	mutable bool m_bProjectionDirty;
 	mutable bool m_bViewDirty;
 
-	// Calculated projection matrix
 	mutable glm::mat4 m_mProjectionMatrix;
-
-	// Calculated view matrix
 	mutable glm::mat4 m_mViewMatrix;
 };
 

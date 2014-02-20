@@ -96,6 +96,30 @@ void Scene::MouseMotion( int x, int y )
 
 void Scene::Update(float p_fDelta)
 {
+	UpdateInput(p_fDelta);
+
+	// Update nodes
+	for (int i=0;i<m_lTopNode.size(); i++)
+	{
+		Node *node = m_lTopNode.at(i);
+		node->Update(p_fDelta);
+	}
+	
+	// Culling
+	m_lRenderNode.clear();
+	DoCulling(m_pQuadTree, m_pCamera1->GetFrustum(), m_lRenderNode);
+
+	m_lRenderNodeOctree.clear();
+	OctreeCulling(m_pOcTree, m_pCamera1->GetFrustum(), m_lRenderNodeOctree); 
+
+	if (m_bRenderOctree)
+		printf("\nNode: %d    %d", m_lRenderNodeOctree.size());
+	else
+		printf("\nNode: %d    %d", m_lRenderNode.size());
+}
+
+void Scene::UpdateInput(float p_fDelta)
+{
 	glfwGetMousePos(&mouseX, &mouseY);
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS )
 	{
@@ -160,26 +184,6 @@ void Scene::Update(float p_fDelta)
 	else if (glfwGetKey('M') == GLFW_RELEASE)
         m_bToggleCamera = false;
 
-
-
-	// Update nodes
-	for (int i=0;i<m_lTopNode.size(); i++)
-	{
-		Node *node = m_lTopNode.at(i);
-		node->Update(p_fDelta);
-	}
-	
-	// Culling
-	m_lRenderNode.clear();
-	DoCulling(m_pQuadTree, m_pCamera1->GetFrustum(), m_lRenderNode);
-
-	m_lRenderNodeOctree.clear();
-	OctreeCulling(m_pOcTree, m_pCamera1->GetFrustum(), m_lRenderNodeOctree); 
-
-	if (m_bRenderOctree)
-		printf("\nNode: %d    %d", m_lRenderNodeOctree.size());
-	else
-		printf("\nNode: %d    %d", m_lRenderNode.size());
 }
 
 

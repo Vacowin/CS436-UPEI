@@ -72,9 +72,10 @@ DebugCube::DebugCube(int p_iID, const glm::vec3 &p_vPos, glm::vec3 p_vDim) : Nod
 	m_pDecl->End();
 	
 	if (!s_pMaterial)
+	{
 		s_pMaterial = wolf::MaterialManager::CreateMaterial("debugcube");
-	s_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
-
+		s_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
+	}
 }
 
 

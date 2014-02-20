@@ -50,8 +50,7 @@ private:
 
 	wolf::VertexBuffer* m_pVB ;
 	wolf::VertexDeclaration* m_pDecl;
-	wolf::Program* m_pProgram ;
-
+	static wolf::Material* s_pMaterial;
 };
 
 #endif

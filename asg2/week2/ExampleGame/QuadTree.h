@@ -15,7 +15,6 @@ public:
 	void AddNode( Node *p_pNode );
 
 	bool Contains( QuadTree *p_pChildTree, Node *p_pNode );
-	bool StopCritiria();
 
 	float GetX() {return m_fX;}
 	float GetZ() {return m_fZ;}
@@ -33,6 +32,8 @@ public:
 	void Render(const glm::mat4& mProj, const glm::mat4& mView);
 
 private:
+	bool StopCritiria();
+
 	float m_fX;
 	float m_fZ;
 	float m_fWidth;
@@ -51,7 +52,7 @@ private:
 
 	wolf::VertexBuffer* m_pVB ;
 	wolf::VertexDeclaration* m_pDecl;
-	wolf::Program* m_pProgram ;
+	static wolf::Material* s_pMaterial;
 };
 
 #endif

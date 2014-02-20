@@ -1,7 +1,7 @@
 #include "QuadTree.h"
 
 
-
+Material *QuadTree::s_pMaterial = NULL;
 
 
 QuadTree::QuadTree( float x, float z, float width, float height, int level )
@@ -33,7 +33,6 @@ QuadTree::QuadTree( float x, float z, float width, float height, int level )
 		{ x, 0.0f, z, 255, 0, 0, 255 },
 	};
 
-	m_pProgram = wolf::ProgramManager::CreateProgram("data/cube.vsh", "data/cube.fsh");
     m_pVB = wolf::BufferManager::CreateVertexBuffer(lineVertices, sizeof(Vertex) * 8);
 
 	m_pDecl = new wolf::VertexDeclaration();
@@ -42,6 +41,12 @@ QuadTree::QuadTree( float x, float z, float width, float height, int level )
 	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
 	m_pDecl->SetVertexBuffer(m_pVB);
 	m_pDecl->End();
+
+	if (!s_pMaterial)
+	{
+		s_pMaterial = wolf::MaterialManager::CreateMaterial("quadtreeline");
+		s_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
+	}
 }
 
 void QuadTree::AddNode( Node *p_pNode )
@@ -145,14 +150,13 @@ void QuadTree::Render(const glm::mat4& mProj, const glm::mat4& mView)
 	// Draw lines
 	glm::mat4 mWorld = glm::mat4(glm::translate(0,0,0));
 
-	m_pProgram->Bind();
+    m_pDecl->Bind();
+
+    s_pMaterial->SetUniform("projection", mProj);
+    s_pMaterial->SetUniform("view", mView);
+    s_pMaterial->SetUniform("world", mWorld);    
     
-    m_pProgram->SetUniform("projection", mProj);
-    m_pProgram->SetUniform("view", mView);
-    m_pProgram->SetUniform("world", mWorld);    
-    
-	// Set up source data
-	m_pDecl->Bind();
+	s_pMaterial->Apply();
 
     // Draw!
 	glDrawArrays(GL_LINES,0,8);

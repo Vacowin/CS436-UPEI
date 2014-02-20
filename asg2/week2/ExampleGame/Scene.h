@@ -26,12 +26,13 @@ public:
 	void DoCulling(QuadTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes);
 	void OctreeCulling(OcTree* p_pTree, Frustum* p_Frustum, std::vector<Node*> & p_lNodes);
 
-	void MouseMotion( int x, int y);
-
 	void SetRenderOctree(bool value) { m_bRenderOctree = value;};
 private:
 	Scene();
 	~Scene();
+	void MouseMotion( int x, int y);
+	void UpdateInput(float p_fDelta);
+
 	static Scene* s_pSceneInstance;
 
 	std::vector<Node*> m_lTopNode;
