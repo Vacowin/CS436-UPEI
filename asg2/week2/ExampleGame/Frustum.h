@@ -46,7 +46,7 @@ public:
 
 	wolf::VertexDeclaration* m_pDecl ;
 	wolf::VertexBuffer* m_pVB;
-	Material *m_pMaterial;
+	static Material *s_pMaterial;
 };
 
 

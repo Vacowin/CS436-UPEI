@@ -133,7 +133,7 @@ void Scene::Update(float p_fDelta)
 		m_pCamera1->Update(p_fDelta);
 	}
 
-	// Turn on/off Quad Lines
+	// Turn on/off Lines
 	if (glfwGetKey('X') == GLFW_PRESS && !m_bToggleQuadLines)
     {
 		m_bDrawQuadLines = !m_bDrawQuadLines;

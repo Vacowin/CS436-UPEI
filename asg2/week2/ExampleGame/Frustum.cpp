@@ -3,11 +3,12 @@
 
 #define ANG2RAD 3.141592653589/180.0
 
+Material *Frustum::s_pMaterial = NULL;
+
 Frustum::Frustum()
 {
 	m_pDecl = NULL;
 	m_pVB = NULL;
-	m_pMaterial = NULL;
 }
 
 void Frustum::setCamInternals(float angle, float ratio, float nearD, float farD)
@@ -115,12 +116,12 @@ void Frustum::setCamDef(vec3 &p, vec3 &l, vec3 &u)
 	m_pDecl->SetVertexBuffer(m_pVB);
 	m_pDecl->End();
 
-	if (!m_pMaterial)
+	if (!s_pMaterial)
 	{
-		m_pMaterial = wolf::MaterialManager::CreateMaterial("vcn");
-		m_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
-		m_pMaterial->SetBlendMode(BlendMode::BM_SrcAlpha, BlendMode::BM_OneMinusSrcAlpha);
-		m_pMaterial->SetBlend(true);
+		s_pMaterial = wolf::MaterialManager::CreateMaterial("frustum");
+		s_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
+		s_pMaterial->SetBlendMode(BlendMode::BM_SrcAlpha, BlendMode::BM_OneMinusSrcAlpha);
+		s_pMaterial->SetBlend(true);
 	}
 }
 
@@ -190,11 +191,11 @@ void Frustum::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 	//printf("%f,%f,%f  %f,%f,%f  %f,%f,%f  %f,%f,%f\n",ftl.x,ftl.y,ftl.z,ftr.x,ftr.y,ftr.z,fbl.x,fbl.y,fbl.z,fbr.x,fbr.y,fbr.z);
 	m_pDecl->Bind();
 
-    m_pMaterial->SetUniform("world", mWorld);
-	m_pMaterial->SetUniform("projection", p_mProj);
-	m_pMaterial->SetUniform("view", p_mView);
+    s_pMaterial->SetUniform("world", mWorld);
+	s_pMaterial->SetUniform("projection", p_mProj);
+	s_pMaterial->SetUniform("view", p_mView);
 
-	m_pMaterial->Apply();
+	s_pMaterial->Apply();
 
     // Draw 5 Planes
 	glDrawArrays(GL_TRIANGLES, 0, 5* 6);

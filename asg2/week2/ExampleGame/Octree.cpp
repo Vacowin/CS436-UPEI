@@ -139,7 +139,9 @@ void OcTree::AddNode( Node *p_pNode )
 
 bool OcTree::StopCritiria()
 {
-	return (m_lNodes.size()<5);
+	if (m_iLevel > 5)
+		return true;
+	return (m_lNodes.size()<4);
 }
 
 bool OcTree::Contains( OcTree *p_pChildTree, Node *p_pNode )

@@ -135,7 +135,9 @@ bool QuadTree::Contains( QuadTree *p_pChildTree, Node *p_pNode )
 
 bool QuadTree::StopCritiria()
 {
-	return (m_lNodes.size()<3) || (m_iLevel > 10);
+	if (m_iLevel > 10)
+		return true;
+	return (m_lNodes.size()<3) ;
 }
 
 void QuadTree::Render(const glm::mat4& mProj, const glm::mat4& mView)
