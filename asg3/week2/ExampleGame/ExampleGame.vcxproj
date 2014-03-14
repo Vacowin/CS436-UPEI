@@ -114,7 +114,10 @@
     <ClCompile Include="..\..\wolf\W_VertexDeclaration.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugCube.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="src\ExampleGame.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -163,7 +166,10 @@
     <ClInclude Include="..\..\wolf\W_VertexDeclaration.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugCube.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Emitter.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="src\ExampleGame.h" />
     <ClInclude Include="src\Game.h" />

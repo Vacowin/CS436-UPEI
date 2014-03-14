@@ -102,6 +102,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wolf">
@@ -236,5 +239,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="Effect.h" />
+    <ClInclude Include="Emitter.h" />
   </ItemGroup>
 </Project>
