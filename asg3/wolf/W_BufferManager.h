@@ -27,6 +27,8 @@ class BufferManager
 		//-------------------------------------------------------------------------
 		static VertexBuffer* CreateVertexBuffer(unsigned int p_uiLength);
 		static VertexBuffer* CreateVertexBuffer(const void* p_pData, unsigned int p_uiLength);
+		static VertexBuffer* BufferManager::CreateDynamicVertexBuffer(const void* p_pData, unsigned int p_uiLength);
+
 		static IndexBuffer* CreateIndexBuffer(unsigned int p_uiNumIndices);
 
 		static void DestroyBuffer(Buffer* p_pBuf);

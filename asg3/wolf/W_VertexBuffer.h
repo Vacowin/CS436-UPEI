@@ -13,17 +13,26 @@
 
 namespace wolf
 {
+
 class VertexBuffer : public Buffer
 {
+	enum BufferUsage
+	{
+		usage_static = GL_STATIC_DRAW,
+		usage_dynamic = GL_DYNAMIC_DRAW
+	};
+
 	friend class BufferManager;
 	public:
+
 		//-------------------------------------------------------------------------
 		// PUBLIC INTERFACE
 		//-------------------------------------------------------------------------
 		virtual void Bind();
 		virtual void Write(const void* p_pData, int p_iLength = -1);
 		//-------------------------------------------------------------------------
-
+		void* Lock();
+		void* Unlock();
 	private:
 		//-------------------------------------------------------------------------
 		// PRIVATE METHODS
@@ -31,6 +40,7 @@ class VertexBuffer : public Buffer
 		// Made private to enforce creation and deletion via BufferManager
 		VertexBuffer(unsigned int p_uiLength);
 		VertexBuffer(const void* p_pData, unsigned int p_uiLength);
+		VertexBuffer(BufferUsage usage,const void* p_pData, unsigned int p_uiLength);
 		virtual ~VertexBuffer();
 		//-------------------------------------------------------------------------
 
@@ -39,6 +49,7 @@ class VertexBuffer : public Buffer
 		//-------------------------------------------------------------------------
 		unsigned int		m_uiLength;	
 		GLuint				m_uiBuffer;
+		BufferUsage m_usage;
 		//-------------------------------------------------------------------------
 };
 

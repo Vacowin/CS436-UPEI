@@ -16,6 +16,7 @@
 #include "week2/ExampleGame/Particle.h"
 #include "week2\ExampleGame\Scene.h"
 #include <ctime>
+#include "week2/ExampleGame/Effect.h"
 
 using namespace week2;
 
@@ -29,6 +30,8 @@ ExampleGame::~ExampleGame()
 {
 }
 
+static Effect* effect = nullptr;
+
 bool ExampleGame::Init()
 {
 	Scene::CreateInstance();
@@ -36,8 +39,11 @@ bool ExampleGame::Init()
 
 	Scene::Instance()->SetActiveCamera(pCamera1);
 
-	Particle *particle = new Particle(0, glm::vec3((rand()%20 + 10)*0.1f, (rand()%20+ 10)*0.1f, (rand()%20+ 10)*0.1f));
-	Scene::Instance()->AddTopNode(particle);
+	//Particle *particle = new Particle(0, glm::vec3((rand()%20 + 10)*0.1f, (rand()%20+ 10)*0.1f, (rand()%20+ 10)*0.1f));
+	//Scene::Instance()->AddTopNode(particle);
+
+	effect = new Effect(0,glm::vec3(0.0f,0.0f,0.0f));
+	Scene::Instance()->AddTopNode(effect);
 
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -54,7 +60,7 @@ bool ExampleGame::Init()
 bool ExampleGame::Update(float p_fDelta)
 {
 	Scene::Instance()->Update(p_fDelta);
-	
+
 	return true;
 }
 

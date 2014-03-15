@@ -98,6 +98,7 @@ int Game::Run(const char* p_strAppName, int p_iWindowWidth, int p_iWindowHeight)
 	// Call Init() on game subclass.
 	bool bContinue = this->Init();
 	glEnable(GL_DEPTH_TEST);
+	m_fFrameTime = 0.0f;
 	while (bContinue
 			&& glfwGetKey(GLFW_KEY_ESC) != GLFW_PRESS
 			&& glfwGetWindowParam(GLFW_OPENED))

@@ -25,6 +25,11 @@ VertexBuffer* BufferManager::CreateVertexBuffer(const void* p_pData, unsigned in
 	return new VertexBuffer(p_pData,p_uiLength);
 }
 
+VertexBuffer* BufferManager::CreateDynamicVertexBuffer(const void* p_pData, unsigned int p_uiLength)
+{
+	return new VertexBuffer(VertexBuffer::BufferUsage::usage_dynamic, p_pData,p_uiLength);
+}
+
 //----------------------------------------------------------
 // Creates a new Index Buffer
 //----------------------------------------------------------

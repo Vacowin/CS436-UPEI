@@ -3,6 +3,7 @@
 
 Effect::Effect(int p_iID, const glm::vec3 &p_vPos) : Node(p_iID, p_vPos)
 {
+	m_emitterList.push_back(new Emitter(0,glm::vec3(0.0f,0.0f,0.0f)));
 }
 
 Effect::~Effect(void)
