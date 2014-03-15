@@ -1,22 +1,22 @@
 #include "Particle.h"
-#include "W_BufferManager.h"
-
-Material *Particle::s_pMaterial = NULL;
 
 Particle::Particle(int p_iID, const glm::vec3 &p_vPos) : Node(p_iID, p_vPos)
 {
 	m_pNext = nullptr;
 	m_pPre = nullptr;
 	m_fSize = 5.0f;
+	m_vColor = glm::vec4(155, 155, 155, 0);
+	m_fFade = 1.0f;
 
+	/*
 	Vertex cubeVertices[] = {
 	// Front
-		{ -5, -5, 5, 255, 0, 0, 255 },
-		{ -5,  5, 5, 255, 0, 0, 255 },
-		{  5,  5, 5, 255, 0, 0, 255 },
-		{  5,  5, 5, 255, 0, 0, 255 },
-		{  5, -5, 5, 255, 0, 0, 255 },
-		{ -5, -5, 5, 255, 0, 0, 255 },
+		{ -5, -5, 5, 255, 0, 0, 255, 0 ,0 },
+		{ -5,  5, 5, 255, 0, 0, 255, 0, 1 },
+		{  5,  5, 5, 255, 0, 0, 255, 1, 1 },
+		{  5,  5, 5, 255, 0, 0, 255, 1 ,1 },
+		{  5, -5, 5, 255, 0, 0, 255, 1, 0 },
+		{ -5, -5, 5, 255, 0, 0, 255, 0, 0 },
 	};
 
 	wolf::VertexBuffer* pVB = wolf::BufferManager::CreateVertexBuffer(cubeVertices, sizeof(Vertex) * 6);
@@ -25,14 +25,26 @@ Particle::Particle(int p_iID, const glm::vec3 &p_vPos) : Node(p_iID, p_vPos)
 	m_pDecl->Begin();
 	m_pDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
 	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+	m_pDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
 	m_pDecl->SetVertexBuffer(pVB);
 	m_pDecl->End();
 	
-	if (!s_pMaterial)
+	//if (!s_pMaterial)
 	{
 		s_pMaterial = wolf::MaterialManager::CreateMaterial("debugcube");
 		s_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
 	}
+
+	m_pTexture = wolf::TextureManager::CreateTexture("data/glow.tga");
+	*/
+
+	m_vertices[0].u = 0.0f; m_vertices[0].v = 0.0f;
+	m_vertices[1].u = 0.0f; m_vertices[1].v = 1.0f;
+	m_vertices[2].u = 1.0f; m_vertices[2].v = 1.0f;
+	m_vertices[3].u = 1.0f; m_vertices[3].v = 1.0f;
+	m_vertices[4].u = 1.0f; m_vertices[4].v = 0.0f;
+	m_vertices[5].u = 0.0f; m_vertices[5].v = 0.0f;
+	
 }
 
 
@@ -60,6 +72,10 @@ Vertex* Particle::GetVertices()
 		m_vertices[i].x = temp.x;
 		m_vertices[i].y = temp.y;
 		m_vertices[i].z = temp.z;
+		m_vertices[i].r = (GLubyte)m_vColor.r;
+		m_vertices[i].g = (GLubyte)m_vColor.g;
+		m_vertices[i].b = (GLubyte)m_vColor.b;
+		m_vertices[i].a = (GLubyte)(m_vColor.a * m_fFade);
 	}
 
 	return m_vertices;
@@ -68,6 +84,7 @@ Vertex* Particle::GetVertices()
 void Particle::Update(float m_pDelta)
 {
 	Translate(m_vVelocity*m_pDelta);
+	//Rotate(glm::vec3(500,500,500)*m_pDelta);
 }
 
 void Particle::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
@@ -80,7 +97,8 @@ void Particle::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
     s_pMaterial->SetUniform("world", mWorld);
 	s_pMaterial->SetUniform("projection", p_mProj);
 	s_pMaterial->SetUniform("view", p_mView);
-
+	s_pMaterial->SetTexture("tex", m_pTexture);
+	s_pMaterial->SetUniform("color", glm::vec4(0,255,0,255));
 	s_pMaterial->Apply();
 
     // Draw!

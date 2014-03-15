@@ -5,6 +5,8 @@
 #include "Node.h"
 #include "Particle.h"
 #include "W_VertexBuffer.h"
+#include "W_Texture.h"
+#include "W_VertexDeclaration.h"
 
 class Emitter : public Node
 {
@@ -68,6 +70,7 @@ private:
 	wolf::VertexDeclaration* m_pDecl;
 	wolf::VertexBuffer* m_pVertexBuffer;
 	wolf::Material *m_pMaterial;
+	wolf::Texture* m_pTexture;
 };
 
 #endif

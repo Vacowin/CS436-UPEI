@@ -10,10 +10,10 @@ Emitter::Emitter(int p_iID,const glm::vec3 &p_vPos):Node(p_iID, p_vPos)
 	m_fDuration = -1;
 	m_fLifeTime = 0.0f;
 	m_eSpawnMode = CONTINUOUS;
-	m_iMaxNumParticles = 100;
+	m_iMaxNumParticles = 500;
 	m_bRandomBirthRate = false;
 	m_fToSpawnAccumulator = 0;
-	m_fBirthRate = 10.0;
+	m_fBirthRate = 100.0;
 
 	m_bRandomVelocity = true;
 	m_vVelocity = glm::vec3(0.0f,1.0f,0.0f);
@@ -41,11 +41,20 @@ void Emitter::Init()
 	m_pDecl->Begin();
 	m_pDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
 	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+	m_pDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
 	m_pDecl->SetVertexBuffer(m_pVertexBuffer);
 	m_pDecl->End();
 
 	m_pMaterial = wolf::MaterialManager::CreateMaterial("emitter");
 	m_pMaterial->SetProgram("data/cube.vsh", "data/cube.fsh");
+
+	m_pMaterial->SetDepthTest(true);
+	m_pMaterial->SetDepthFunc(DepthFunc::DF_Always);
+	//m_pMaterial->SetBlendEquation(BlendEquation::BE_Add);
+	m_pMaterial->SetBlendMode(BlendMode::BM_SrcAlpha, BlendMode::BM_OneMinusSrcAlpha);
+	m_pMaterial->SetBlend(true);
+
+	m_pTexture = wolf::TextureManager::CreateTexture("data/glow3.tga");
 }
 
 void Emitter::AddToPool(Particle *p)
@@ -138,6 +147,8 @@ void Emitter::SpawnParticle()
 			pParticle->SetVelocity(m_vVelocity);
 		}
 
+		pParticle->SetTranslation(GetWorldTranslation());
+
 		AddToActive(pParticle);
 	}
 	// more stuff
@@ -185,7 +196,6 @@ void Emitter::UpdateSpawning(float p_fDelta)
 void Emitter::Update(float p_fDelta)
 {
 	m_fLifeTime += p_fDelta;
-	printf("%f\n", m_fLifeTime);
 	if (m_fDuration < 0 || m_fLifeTime < m_fDuration)
 		UpdateSpawning(p_fDelta);
 
@@ -231,11 +241,13 @@ void Emitter::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 	}
 	m_pVertexBuffer->Unlock();
 	
-	glm::mat4 mWorld = glm::translate(glm::vec3(0.0f,0.0f,0.0f));
+	glm::mat4 mWorld = glm::mat4(glm::transpose(glm::mat3(p_mView)));
 
     m_pMaterial->SetUniform("world", mWorld);
 	m_pMaterial->SetUniform("projection", p_mProj);
 	m_pMaterial->SetUniform("view", p_mView);
+	m_pMaterial->SetUniform("color", glm::vec4(1.0f,0.7f,0.1f,1.0f));
+	m_pMaterial->SetTexture("tex", m_pTexture);
 	m_pMaterial->Apply();
 	m_pDecl->Bind();
 	// Draw all particles

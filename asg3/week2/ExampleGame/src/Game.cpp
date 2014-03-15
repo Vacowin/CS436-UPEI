@@ -115,7 +115,7 @@ int Game::Run(const char* p_strAppName, int p_iWindowWidth, int p_iWindowHeight)
 		glViewport( 0, 0, width, height );
 
 		// Clear color buffer to black
-		glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+		glClearColor( 0.2f,0.2f, 0.2f, 0.0f );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		// Update and render game
