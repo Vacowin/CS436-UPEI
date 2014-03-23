@@ -102,9 +102,24 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Emitter.cpp" />
+    <ClCompile Include="Effect.cpp">
+      <Filter>ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Emitter.cpp">
+      <Filter>ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>ParticleEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="AddVelocityAffector.cpp">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClCompile>
+    <ClCompile Include="Affector.cpp">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeAffector.cpp">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wolf">
@@ -112,6 +127,12 @@
     </Filter>
     <Filter Include="PVR">
       <UniqueIdentifier>{628cc568-0fe6-4e7f-ad76-989d6186daa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleEffect">
+      <UniqueIdentifier>{9efedffd-4459-4bdc-8cef-31b408f1e97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleEffect\Affector">
+      <UniqueIdentifier>{5cf78782-8be2-4c1f-ab21-6d10e9c3ca0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -239,8 +260,23 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="Emitter.h" />
+    <ClInclude Include="Effect.h">
+      <Filter>ParticleEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter.h">
+      <Filter>ParticleEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>ParticleEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="AddVelocityAffector.h">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClInclude>
+    <ClInclude Include="Affector.h">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeAffector.h">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

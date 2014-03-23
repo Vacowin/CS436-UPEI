@@ -7,6 +7,7 @@
 #include "W_VertexBuffer.h"
 #include "W_Texture.h"
 #include "W_VertexDeclaration.h"
+#include "FadeAffector.h"
 
 class Emitter : public Node
 {
@@ -22,6 +23,7 @@ public:
 	void Update(float p_fDelta);
 	void Render(const glm::mat4& p_mView, const glm::mat4& p_mProj);
 
+	void KillParticle(Particle* p);
 private:
 	void Init();
 	void UpdateSpawning(float p_fDelta);
@@ -31,7 +33,6 @@ private:
 	void RemoveFromActive(Particle *p);
 	Particle* GetFreeParticle();
 	void SpawnParticle();
-	void ParticleKilled(Particle* p);
 	void CalculateBurstTime();
 
 	float RandomRange(float fMin, float fMax) { return fMin + (float)rand()/((float)RAND_MAX/(fMax-fMin)); }
@@ -42,10 +43,15 @@ private:
 	int m_iMaxNumParticles;
 	SpawnMode m_eSpawnMode;
 
+	float m_fVelocityAffectorChace;
 	bool m_bRandomVelocity;
 	glm::vec3 m_vVelocity;
 	glm::vec3 m_vVelocityMin;
 	glm::vec3 m_vVelocityMax;
+
+	float m_fFaceAffectorChance;
+	bool m_bRandomFade;
+	FadeMode m_eFadeMode;
 
 	float m_fToSpawnAccumulator;
 	bool m_bRandomBirthRate;

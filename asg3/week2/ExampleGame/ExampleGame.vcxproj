@@ -112,10 +112,13 @@
     <ClCompile Include="..\..\wolf\W_TextureManager.cpp" />
     <ClCompile Include="..\..\wolf\W_VertexBuffer.cpp" />
     <ClCompile Include="..\..\wolf\W_VertexDeclaration.cpp" />
+    <ClCompile Include="AddVelocityAffector.cpp" />
+    <ClCompile Include="Affector.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugCube.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Emitter.cpp" />
+    <ClCompile Include="FadeAffector.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -164,10 +167,13 @@
     <ClInclude Include="..\..\wolf\W_Types.h" />
     <ClInclude Include="..\..\wolf\W_VertexBuffer.h" />
     <ClInclude Include="..\..\wolf\W_VertexDeclaration.h" />
+    <ClInclude Include="AddVelocityAffector.h" />
+    <ClInclude Include="Affector.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugCube.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Emitter.h" />
+    <ClInclude Include="FadeAffector.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Scene.h" />

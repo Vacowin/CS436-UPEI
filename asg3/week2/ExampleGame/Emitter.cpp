@@ -1,5 +1,8 @@
 #include "Emitter.h"
 #include "W_BufferManager.h"
+#include "AddVelocityAffector.h"
+#include "Affector.h"
+#include "Scene.h"
 
 Emitter::Emitter(int p_iID,const glm::vec3 &p_vPos):Node(p_iID, p_vPos)
 {
@@ -10,15 +13,21 @@ Emitter::Emitter(int p_iID,const glm::vec3 &p_vPos):Node(p_iID, p_vPos)
 	m_fDuration = -1;
 	m_fLifeTime = 0.0f;
 	m_eSpawnMode = CONTINUOUS;
-	m_iMaxNumParticles = 500;
+	m_iMaxNumParticles = 1000;
 	m_bRandomBirthRate = false;
 	m_fToSpawnAccumulator = 0;
-	m_fBirthRate = 100.0;
+	m_fBirthRate = 200.0;
 
+	m_fVelocityAffectorChace = 1.0f;
 	m_bRandomVelocity = true;
 	m_vVelocity = glm::vec3(0.0f,1.0f,0.0f);
-	m_vVelocityMin = -glm::vec3(25.0f, 25.0f, 25.0f);
-	m_vVelocityMax = glm::vec3(25.0f, 25.0f, 25.0f);
+	m_vVelocityMin = -glm::vec3(5.0f, 0.0f, 5.0f);
+	m_vVelocityMax = glm::vec3(5.0f, 35.0f, 5.0f);
+
+	m_fFaceAffectorChance = 1.0;
+	m_bRandomFade = false;
+	m_eFadeMode = FadeOut;
+
 	Init();
 }
 
@@ -29,7 +38,12 @@ Emitter::~Emitter()
 void Emitter::Init()
 {
 	for (int i = 0; i < m_iMaxNumParticles; i++)
-		AddToPool(new Particle(0, glm::vec3(0.0f,0.0f,0.0f)));
+	{
+		Particle* pParticle = new Particle(i, glm::vec3(0.0f,0.0f,0.0f));
+		pParticle->SetEmitter(this);
+		
+		AddToPool(pParticle);
+	}
 
 	CalculateBurstTime();
 	
@@ -40,7 +54,7 @@ void Emitter::Init()
 	m_pDecl = new wolf::VertexDeclaration();
 	m_pDecl->Begin();
 	m_pDecl->AppendAttribute(wolf::AT_Position, 3, wolf::CT_Float);
-	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_UByte);
+	m_pDecl->AppendAttribute(wolf::AT_Color, 4, wolf::CT_Float);
 	m_pDecl->AppendAttribute(wolf::AT_TexCoord1, 2, wolf::CT_Float);
 	m_pDecl->SetVertexBuffer(m_pVertexBuffer);
 	m_pDecl->End();
@@ -55,6 +69,13 @@ void Emitter::Init()
 	m_pMaterial->SetBlend(true);
 
 	m_pTexture = wolf::TextureManager::CreateTexture("data/glow3.tga");
+}
+
+bool ChanceOfAffector(float p_fRate)
+{
+	// random (0,1]
+	float random = ((double) rand() / (RAND_MAX+1));
+	return (p_fRate - random>=0?true:false);
 }
 
 void Emitter::AddToPool(Particle *p)
@@ -109,7 +130,7 @@ Particle* Emitter::GetFreeParticle()
 		return nullptr;
 }
 
-void Emitter::ParticleKilled(Particle* p)
+void Emitter::KillParticle(Particle* p)
 {
 	RemoveFromActive(p);
 	AddToPool(p);
@@ -133,20 +154,37 @@ void Emitter::SpawnParticle()
 	}
 	if (pParticle)
 	{
-		pParticle->SetTranslation(GetTranslation());
+		//pParticle->SetTranslation(GetTranslation());
 
-		if (m_bRandomVelocity)
+		pParticle->Reset();
+		pParticle->GetAffectors().push_back(new Affector());
+		// Velocity Affector
+		if (ChanceOfAffector(m_fVelocityAffectorChace))
 		{
-			m_vVelocity.x = RandomRange(m_vVelocityMin.x, m_vVelocityMax.x);
-			m_vVelocity.y = RandomRange(m_vVelocityMin.y, m_vVelocityMax.y);
-			m_vVelocity.z = RandomRange(m_vVelocityMin.z, m_vVelocityMax.z);
-			pParticle->SetVelocity(m_vVelocity);
-		}
-		else
-		{
-			pParticle->SetVelocity(m_vVelocity);
+			if (m_bRandomVelocity)
+			{
+				m_vVelocity.x = RandomRange(m_vVelocityMin.x, m_vVelocityMax.x);
+				m_vVelocity.y = RandomRange(m_vVelocityMin.y, m_vVelocityMax.y);
+				m_vVelocity.z = RandomRange(m_vVelocityMin.z, m_vVelocityMax.z);
+				pParticle->SetVelocity(m_vVelocity);
+			}
+			else
+			{
+				pParticle->SetVelocity(m_vVelocity);
+			}
+			pParticle->GetAffectors().push_back(new AddVelocityAffector());
 		}
 
+		if (ChanceOfAffector(m_fFaceAffectorChance))
+		{
+			if (m_bRandomFade)
+			{
+				m_eFadeMode = static_cast<FadeMode>(rand()%2);
+			}
+			pParticle->GetAffectors().push_back(new FadeAffector(m_eFadeMode));
+		}
+
+		// box, sphere emitter
 		pParticle->SetTranslation(GetWorldTranslation());
 
 		AddToActive(pParticle);
@@ -233,6 +271,7 @@ void Emitter::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 
 		for(int i = 0; i < 6; i++)
 		{
+			Vertex v = vParticleVerts[i];
 			pVertices[iNumVertices + i] = vParticleVerts[i];
 		}
 		
@@ -246,7 +285,7 @@ void Emitter::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
     m_pMaterial->SetUniform("world", mWorld);
 	m_pMaterial->SetUniform("projection", p_mProj);
 	m_pMaterial->SetUniform("view", p_mView);
-	m_pMaterial->SetUniform("color", glm::vec4(1.0f,0.7f,0.1f,1.0f));
+	//m_pMaterial->SetUniform("color", glm::vec4(1.0f,0.7f,0.1f,1.0f));
 	m_pMaterial->SetTexture("tex", m_pTexture);
 	m_pMaterial->Apply();
 	m_pDecl->Bind();

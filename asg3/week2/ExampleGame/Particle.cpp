@@ -1,12 +1,15 @@
 #include "Particle.h"
+#include "Affector.h"
 
 Particle::Particle(int p_iID, const glm::vec3 &p_vPos) : Node(p_iID, p_vPos)
 {
 	m_pNext = nullptr;
 	m_pPre = nullptr;
 	m_fSize = 5.0f;
-	m_vColor = glm::vec4(155, 155, 155, 0);
+	m_vColor = glm::vec4(1.0f,0.7f,0.1f,1.0f);
 	m_fFade = 1.0f;
+	m_fAge = 0.0f;
+	m_fLifeTime = 2.0f;
 
 	/*
 	Vertex cubeVertices[] = {
@@ -52,6 +55,13 @@ Particle::~Particle(void)
 {
 }
 
+void Particle::Reset()
+{
+	m_fAge = 0.0f;
+	m_fFade = 1.0f;
+	m_lAffectors.clear();
+}
+
 Vertex* Particle::GetVertices()
 {
 	glm::mat4 mWorld = GetWorldTransform();
@@ -72,19 +82,26 @@ Vertex* Particle::GetVertices()
 		m_vertices[i].x = temp.x;
 		m_vertices[i].y = temp.y;
 		m_vertices[i].z = temp.z;
-		m_vertices[i].r = (GLubyte)m_vColor.r;
-		m_vertices[i].g = (GLubyte)m_vColor.g;
-		m_vertices[i].b = (GLubyte)m_vColor.b;
-		m_vertices[i].a = (GLubyte)(m_vColor.a * m_fFade);
+		m_vertices[i].r = m_vColor.r;
+		m_vertices[i].g = m_vColor.g;
+		m_vertices[i].b = m_vColor.b;
+		if (m_iID == 1)
+			printf("%f\n", m_fFade);
+		m_vertices[i].a = (m_vColor.a * m_fFade);
 	}
 
 	return m_vertices;
 }
 
-void Particle::Update(float m_pDelta)
+void Particle::Update(float p_pDelta)
 {
-	Translate(m_vVelocity*m_pDelta);
+	//Translate(m_vVelocity*m_pDelta);
 	//Rotate(glm::vec3(500,500,500)*m_pDelta);
+
+	for (int i = 0; i< m_lAffectors.size(); i++)
+	{
+		m_lAffectors.at(i)->Apply(p_pDelta, this);
+	}
 }
 
 void Particle::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)

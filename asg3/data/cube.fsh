@@ -9,7 +9,7 @@ uniform vec4 color;
 
 void main()
 {	
-	PixelColor =  texture(tex, v_uv1) * color ;
+	PixelColor =  texture(tex, v_uv1) * v_color ;
 }
 
 

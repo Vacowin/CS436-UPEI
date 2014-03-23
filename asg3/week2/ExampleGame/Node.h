@@ -13,7 +13,7 @@ using namespace Common;
 struct Vertex
 {
 	GLfloat x,y,z;
-	GLubyte r,g,b,a;
+	GLfloat r,g,b,a;
 	GLfloat u,v;
 };
 
