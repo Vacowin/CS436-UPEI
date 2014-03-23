@@ -99,6 +99,10 @@
     <ClCompile Include="..\..\PowerVR\PVRTTriStrip.cpp" />
     <ClCompile Include="..\..\PowerVR\PVRTVector.cpp" />
     <ClCompile Include="..\..\PowerVR\PVRTVertex.cpp" />
+    <ClCompile Include="..\..\tinyxml\tinystr.cpp" />
+    <ClCompile Include="..\..\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\..\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\wolf\W_Buffer.cpp" />
     <ClCompile Include="..\..\wolf\W_BufferManager.cpp" />
     <ClCompile Include="..\..\wolf\W_Common.cpp" />
@@ -121,6 +125,7 @@
     <ClCompile Include="FadeAffector.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ScaleAffector.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="src\ExampleGame.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -153,6 +158,8 @@
     <ClInclude Include="..\..\PowerVR\PVRTTriStrip.h" />
     <ClInclude Include="..\..\PowerVR\PVRTVector.h" />
     <ClInclude Include="..\..\PowerVR\PVRTVertex.h" />
+    <ClInclude Include="..\..\tinyxml\tinystr.h" />
+    <ClInclude Include="..\..\tinyxml\tinyxml.h" />
     <ClInclude Include="..\..\wolf\W_Buffer.h" />
     <ClInclude Include="..\..\wolf\W_BufferManager.h" />
     <ClInclude Include="..\..\wolf\W_Common.h" />
@@ -176,6 +183,7 @@
     <ClInclude Include="FadeAffector.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="ScaleAffector.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="src\ExampleGame.h" />
     <ClInclude Include="src\Game.h" />

@@ -120,6 +120,21 @@
     <ClCompile Include="FadeAffector.cpp">
       <Filter>ParticleEffect\Affector</Filter>
     </ClCompile>
+    <ClCompile Include="ScaleAffector.cpp">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tinyxml\tinystr.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tinyxml\tinyxml.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tinyxml\tinyxmlerror.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tinyxml\tinyxmlparser.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wolf">
@@ -133,6 +148,9 @@
     </Filter>
     <Filter Include="ParticleEffect\Affector">
       <UniqueIdentifier>{5cf78782-8be2-4c1f-ab21-6d10e9c3ca0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinyxml">
+      <UniqueIdentifier>{684ecbc2-9364-4367-873f-92b5abeb56da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +295,15 @@
     </ClInclude>
     <ClInclude Include="FadeAffector.h">
       <Filter>ParticleEffect\Affector</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleAffector.h">
+      <Filter>ParticleEffect\Affector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tinyxml\tinystr.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\tinyxml\tinyxml.h">
+      <Filter>tinyxml</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,15 @@
+<Emitter name="fire" texture="glow3.tga" num_particles="500"
+	duration="-1" mode="continuous" type="constant" birthRate="150">
+ 
+	<SpawnProperty name="velocity" type="random" minX="-3" minY="3" minZ="-3" maxX="3" maxY="20" maxZ="3"/>
+<!--	<SpawnProperty name="color" type="constant" r="1" g="0.7" b="0.1"/>  -->
+	<SpawnProperty name="color" type="random" startR="1" startG="0.7" startB="0.1" endR="1.0" endG="0.2" endB="0"/> 
+	<SpawnProperty name="size" type="random" min="0.5" max="1.5"/>
+	<SpawnProperty name="fade" type="constant" value="1"/>
+	<SpawnProperty name="lifeTime" type="constant" value="1" />
+ 
+	<Affector type="scale" chance="1" start="5" end="10"/>
+	<Affector type="velocity" chance="1"/>
+	<Affector type="fade" chance="1" mode="Out"/>
+  
+</Emitter>

@@ -9,7 +9,7 @@
 class Effect : public Node
 {
 public:
-	Effect(int p_iID, const glm::vec3 &p_vPos);
+	Effect(std::string p_sPath, const glm::vec3 &p_vPos);
 	~Effect();
 
 	void Update(float p_fDelta);
@@ -17,6 +17,7 @@ public:
 
 private:
 	std::vector<Emitter*> m_emitterList;
+	std::string m_sName;
 };
 
 #endif

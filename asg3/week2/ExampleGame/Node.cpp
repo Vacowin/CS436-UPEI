@@ -1,5 +1,11 @@
 #include "Node.h"
 
+Node::Node()
+{
+	m_iID = 0;
+	m_pParent = NULL;
+	m_lChildren = vector<Node*>();
+}
 
 Node::Node(int p_iID, const glm::vec3 &p_vPos)
 {

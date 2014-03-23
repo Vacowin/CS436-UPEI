@@ -17,9 +17,10 @@ class Emitter : public Node
 		BURST
 	};
 public:
-	Emitter(int p_iID,const glm::vec3 &p_vPos);
+	Emitter(std::string p_sPath, const glm::vec3 &p_vPos);
 	~Emitter();
 
+	void LoadXML(const std::string& p_sXMLPath);
 	void Update(float p_fDelta);
 	void Render(const glm::mat4& p_mView, const glm::mat4& p_mProj);
 
@@ -37,6 +38,8 @@ private:
 
 	float RandomRange(float fMin, float fMax) { return fMin + (float)rand()/((float)RAND_MAX/(fMax-fMin)); }
 
+	std::string m_sEmitterName; 
+	std::string m_sTextureName;
 	bool m_bActive;
 	float m_fDuration;
 	float m_fLifeTime;
@@ -49,9 +52,31 @@ private:
 	glm::vec3 m_vVelocityMin;
 	glm::vec3 m_vVelocityMax;
 
+	float m_fColorAffectorChace;
+	bool m_bRandomColor;
+	glm::vec4 m_vColor;
+	glm::vec4 m_vColorStart;
+	glm::vec4 m_vColorEnd;
+
 	float m_fFaceAffectorChance;
-	bool m_bRandomFade;
 	FadeMode m_eFadeMode;
+	bool m_bRandomFadeSpawn;
+	float m_fFade;
+	float m_fFadeMin;
+	float m_fFadeMax;
+
+	float m_fScaleAffectorChance;
+	float m_fScaleStart;
+	float m_fScaleEnd;
+	bool m_bRandomSize;
+	float m_fSize;
+	float m_fSizeMin;
+	float m_fSizeMax;
+
+	bool m_fRandomSpawnLifeTime;
+	float m_fSpawnLifeTime;
+	float m_fSpawnLifeTimeMin;
+	float m_fSpawnLifeTimeMax;
 
 	float m_fToSpawnAccumulator;
 	bool m_bRandomBirthRate;

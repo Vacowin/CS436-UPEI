@@ -1,9 +1,44 @@
 #include "Effect.h"
+#include "tinyxml\tinyxml.h"
 
-
-Effect::Effect(int p_iID, const glm::vec3 &p_vPos) : Node(p_iID, p_vPos)
+Effect::Effect(std::string p_sPath, const glm::vec3 &p_vPos) : Node(0, p_vPos)
 {
-	m_emitterList.push_back(new Emitter(0,glm::vec3(0.0f,0.0f,0.0f)));
+	SetTranslation(p_vPos);
+
+	TiXmlDocument doc(p_sPath.c_str());
+	if (doc.LoadFile() == false)
+	{
+		return;
+	}
+	TiXmlNode* pRoot = doc.FirstChild("Effect");
+	if (pRoot == NULL)
+	{
+		return;
+	}
+	TiXmlElement* pElement = pRoot->ToElement();
+	m_sName = pElement->Attribute("name");
+
+	TiXmlNode* pChildNode = pRoot->FirstChild();
+	while (pChildNode != NULL )
+	{
+		const char* szNodeName = pChildNode->Value();
+		if (strcmp(szNodeName, "Emitter") == 0)
+		{
+			pElement = pChildNode->ToElement();
+			std::string sFile = pElement->Attribute("file");
+			float x,y,z;
+			pElement->QueryFloatAttribute("x", &x);
+			pElement->QueryFloatAttribute("y", &y);
+			pElement->QueryFloatAttribute("z", &z);
+
+			Emitter *pEmitter = new Emitter(sFile, glm::vec3(x,y,z));
+			pEmitter->SetParent(this);
+			m_lChildren.push_back(pEmitter);
+			m_emitterList.push_back(pEmitter);
+		}
+
+		pChildNode = pChildNode->NextSibling();
+	}
 }
 
 Effect::~Effect(void)

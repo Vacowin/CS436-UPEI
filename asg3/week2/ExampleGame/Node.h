@@ -21,6 +21,7 @@ class Node
 {
 public:
 	//Node(string p_name);
+	Node();
 	Node(int p_iID,const glm::vec3 &p_vPos);
 
 	int GetID() { return m_iID;}
@@ -52,7 +53,7 @@ public:
 
 	const glm::mat4 GetWorldTransform();
 	const glm::mat4 GetTransform() { return m_Transform.GetTransformation(); }
-
+	void SetTransform(Transform  value) { m_Transform = value;}
 
 	virtual void Update(float p_fDelta);
 	virtual void Render(const glm::mat4& p_mView, const glm::mat4& p_mProj){};
