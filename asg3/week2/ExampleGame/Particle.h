@@ -3,25 +3,18 @@
 #define PARTICLE_H
 
 #include "Node.h"
-//#include "Emitter.h"
-/*
-#include "W_VertexDeclaration.h"
-#include "W_Material.h"
-#include "W_BufferManager.h"
-#include "W_Texture.h"
-*/
+
 class Emitter;
 class Affector;
 
 class Particle : public Node
 {
 public:
-	Particle(int p_iID, const glm::vec3 &p_vPos);
+	Particle();
 	~Particle();
 
 	void Reset();
 	void Update(float m_pDelta);
-	void Render(const glm::mat4& p_mView, const glm::mat4& p_mProj);
 
 	Vertex* GetVertices();
 
@@ -29,7 +22,6 @@ public:
 	Emitter* GetEmitter() { return m_pEmitter;}
 	
 	void AddAffector(Affector* p_pAffector) { m_lAffectors.push_back(p_pAffector);}
-	//vector<Affector*>& GetAffectors() { return m_lAffectors;}
 
 	void SetVelocity(const glm::vec3& vel) { m_vVelocity = glm::vec3(vel);}
 	const glm::vec3& GetVelocity() { return m_vVelocity;}

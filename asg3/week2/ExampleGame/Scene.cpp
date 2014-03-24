@@ -33,7 +33,6 @@ Scene::Scene()
 {
 	m_lTopNode = std::vector<Node*>();
 
-	m_bToggleCamera = true;
 }
 
 Scene::~Scene()

@@ -11,29 +11,6 @@ Emitter::Emitter(std::string p_sPath, const glm::vec3 &p_vPos):Node(0, p_vPos)
 	m_pFreeList = nullptr;
 	m_pTailActiveList = nullptr;
 
-	/*
-	m_fDuration = -1;
-	m_fLifeTime = 0.0f;
-	m_eSpawnMode = CONTINUOUS;
-	m_iMaxNumParticles = 500;
-	m_bRandomBirthRate = false;
-	m_fToSpawnAccumulator = 0;
-	m_fBirthRate = 150.0;
-
-	m_fVelocityAffectorChace = 1.0f;
-	m_bRandomVelocity = true;
-	m_vVelocity = glm::vec3(0.0f,1.0f,0.0f);
-	m_vVelocityMin = glm::vec3(-3.0f, 3.0f, -3.0f);
-	m_vVelocityMax = glm::vec3(3.0f, 20.0f, 3.0f);
-
-	m_fFaceAffectorChance = 1.0;
-	m_eFadeMode = FadeOut;
-
-	m_fScaleAffectorChance = 1.0f;
-	m_fScaleStart = 5.0f;
-	m_fScaleEnd = 10.0f;
-	*/
-
 	m_bRandomBirthRate = false;
 	m_bRandomBurstSpawns = false;
 	m_bRandomBurstTime = false;
@@ -91,20 +68,34 @@ Emitter::Emitter(std::string p_sPath, const glm::vec3 &p_vPos):Node(0, p_vPos)
 
 Emitter::~Emitter()
 {
+	Particle* pParticle = m_pActiveList;
+	Particle* pNext ;
+	while(pParticle)
+	{			
+		pNext = pParticle->GetNext();	
+		delete pParticle;
+		pParticle = pNext;
+	}
+
+	pParticle = m_pFreeList;
+	while(pParticle)
+	{			
+		pNext = pParticle->GetNext();	
+		delete pParticle;
+		pParticle = pNext;
+	}
 }
 
 void Emitter::Init()
 {
 	for (int i = 0; i < m_iMaxNumParticles; i++)
 	{
-		Particle* pParticle = new Particle(i, glm::vec3(0.0f,0.0f,0.0f));
+		Particle* pParticle = new Particle();
 		pParticle->SetEmitter(this);
 		
 		AddToPool(pParticle);
 	}
 
-	CalculateBurstTime();
-	
 	Vertex * vertices = new Vertex[m_iMaxNumParticles*6];
 	
 	m_pVertexBuffer = wolf::BufferManager::CreateDynamicVertexBuffer(vertices, sizeof(Vertex) * 6 * m_iMaxNumParticles);
@@ -122,7 +113,7 @@ void Emitter::Init()
 
 	m_pMaterial->SetDepthTest(true);
 	m_pMaterial->SetDepthFunc(DepthFunc::DF_Always);
-	//m_pMaterial->SetBlendEquation(BlendEquation::BE_Add);
+	m_pMaterial->SetBlendEquation(BlendEquation::BE_Add);
 	m_pMaterial->SetBlendMode(BlendMode::BM_SrcAlpha, BlendMode::BM_OneMinusSrcAlpha);
 	m_pMaterial->SetBlend(true);
 
@@ -196,9 +187,9 @@ void Emitter::KillParticle(Particle* p)
 void Emitter::CalculateBurstTime()
 {
 	if (m_bRandomBurstTime)
-		m_fBurstTime = 1; // more
+		m_fBurstTime = RandomRange(m_fBurstTimeMin, m_fBirthRateMax);
 	else
-		m_fBurstTime = 1;
+		m_fBurstTime = m_fInitBurstTime;
 }
 
 void Emitter::SpawnParticle()
@@ -282,20 +273,21 @@ void Emitter::SpawnParticle()
 
 void Emitter::UpdateSpawning(float p_fDelta)
 {
-	int iNumSpawns;
+	int iNumSpawns = 0;
 	if(m_eSpawnMode == CONTINUOUS)
 	{
 		if(m_bRandomBirthRate)
-			m_fBirthRate = 5;//randomRange(m_fBirthRateMin, m_fBirthRateMax);
+			m_fBirthRate = RandomRange(m_fBirthRateMin, m_fBirthRateMax);
 		
 		m_fToSpawnAccumulator += m_fBirthRate * p_fDelta;
 		iNumSpawns = (int)m_fToSpawnAccumulator;
 		m_fToSpawnAccumulator -= iNumSpawns;
-	
+		
 		for(int i = 0; i < iNumSpawns; i++)
 		{
 			SpawnParticle();
 		}
+		
 	}
 	
 	else if (m_eSpawnMode == BURST)
@@ -304,7 +296,7 @@ void Emitter::UpdateSpawning(float p_fDelta)
 		if (m_fBurstTime <=0)
 		{
 			if (m_bRandomBurstSpawns)
-				iNumSpawns = 10; // range
+				iNumSpawns = RandomRange(m_iBurstSpawnMin, m_iBurstSpawnMax);
 			else
 				iNumSpawns = m_iBurstNumSpawns;
 
@@ -313,10 +305,12 @@ void Emitter::UpdateSpawning(float p_fDelta)
 			else
 				m_bActive = false;
 		}
+
+		for (int i=0;i<iNumSpawns;i++)
+			SpawnParticle();
 	}
 
-	for (int i=0;i<iNumSpawns;i++)
-		SpawnParticle();
+	
 }
 
 void Emitter::Update(float p_fDelta)
@@ -330,8 +324,6 @@ void Emitter::Update(float p_fDelta)
 	{
 		pCurrent->Update(p_fDelta);
 		pCurrent = pCurrent->GetNext();
-		//if (m_pActiveList == m_pTailActiveList)
-			//break;
 	}
 }
 
@@ -349,7 +341,6 @@ void Emitter::Render(const glm::mat4& p_mView, const glm::mat4& p_mProj)
 
 		for(int i = 0; i < 6; i++)
 		{
-			Vertex v = vParticleVerts[i];
 			pVertices[iNumVertices + i] = vParticleVerts[i];
 		}
 		
@@ -413,6 +404,7 @@ void Emitter::LoadXML(const std::string& p_sXMLPath)
 	{
 		m_eSpawnMode = BURST;
 		m_bRandomBurstSpawns = type.compare("random")==0?true:false;
+		pElement->QueryFloatAttribute("burstInitTime",&m_fBurstTime);
 		if (m_bRandomBurstSpawns)
 		{
 			pElement->QueryIntAttribute("burstSpawnMin",&m_iBurstSpawnMin);
@@ -435,7 +427,7 @@ void Emitter::LoadXML(const std::string& p_sXMLPath)
 			}
 			else
 			{
-				pElement->QueryFloatAttribute("burstRepeatTime",&m_fBurstTime);
+				pElement->QueryFloatAttribute("burstRepeatTime",&m_fInitBurstTime);
 			}
 		}
 	}

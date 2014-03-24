@@ -1,0 +1,5 @@
+<Effect name="explosion">
+	<Emitter file="data/effect/emitter.wave" x="0" y="0" z="0"/>
+	<Emitter file="data/effect/emitter.flash" x="0" y="0" z="0"/>
+	<Emitter file="data/effect/emitter.explosion" x="0" y="0" z="0"/>
+</Effect>

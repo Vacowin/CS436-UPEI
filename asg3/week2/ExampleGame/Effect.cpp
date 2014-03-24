@@ -43,6 +43,14 @@ Effect::Effect(std::string p_sPath, const glm::vec3 &p_vPos) : Node(0, p_vPos)
 
 Effect::~Effect(void)
 {
+	for (int i=0;i<m_emitterList.size();i++)
+	{
+		Emitter *pEmitter = m_emitterList.at(i);
+		delete pEmitter;
+		pEmitter = nullptr;
+	}
+	m_emitterList.clear();
+	m_lChildren.clear();
 }
 
 void Effect::Update(float p_fDelta)

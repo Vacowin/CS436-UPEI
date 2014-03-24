@@ -97,7 +97,6 @@
     </ClCompile>
     <ClCompile Include="src\ExampleGame.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="DebugCube.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -273,7 +272,6 @@
     </ClInclude>
     <ClInclude Include="src\ExampleGame.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="DebugCube.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="src\Game.h" />

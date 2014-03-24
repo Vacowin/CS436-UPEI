@@ -16,6 +16,12 @@ class Emitter : public Node
 		CONTINUOUS,
 		BURST
 	};
+	enum EmitterType
+	{
+		POINT,
+		BOX,
+		SPHERE
+	};
 public:
 	Emitter(std::string p_sPath, const glm::vec3 &p_vPos);
 	~Emitter();
@@ -85,6 +91,7 @@ private:
 	float m_fBirthRateMax;
 
 	bool m_bRandomBurstTime;
+	float m_fInitBurstTime;
 	float m_fBurstTime;
 	float m_fBurstTimeMin;
 	float m_fBurstTimeMax;

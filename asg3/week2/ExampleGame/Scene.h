@@ -35,8 +35,6 @@ private:
 	std::vector<Node*> m_lRenderNodeOctree;
 	Camera *m_pCamera;
 
-	bool m_bToggleCamera;
-
 	int mouseX ;
 	int mouseY;
 	glm::vec2 mouse;

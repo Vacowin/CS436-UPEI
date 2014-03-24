@@ -1,0 +1,15 @@
+<Emitter name="explosion" texture="glow3.tga" num_particles="500"
+	duration="-1" mode="burst" type="constant" burstSpawnNum="500" burstInitTime="0.5" burstRepeat="true" burstRepeatType="constant" burstRepeatTime="1.0">
+ 
+	<SpawnProperty name="velocity" type="random" minX="-50" minY="-50" minZ="-50" maxX="50" maxY="50" maxZ="50"/>
+<!--	<SpawnProperty name="color" type="constant" r="1" g="0.7" b="0.1"/>  -->
+	<SpawnProperty name="color" type="random" startR="0" startG="0" startB="0" endR="1" endG="1" endB="1"/> 
+	<SpawnProperty name="size" type="random" min="0.2" max="2"/>
+	<SpawnProperty name="fade" type="constant" value="1"/>
+	<SpawnProperty name="lifeTime" type="constant" value="1.0" />
+ 
+	<Affector type="scale" chance="1" start="0" end="5"/>
+	<Affector type="velocity" chance="1"/>
+	<Affector type="fade" chance="1" mode="Out"/>
+  
+</Emitter>

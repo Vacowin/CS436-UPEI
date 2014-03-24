@@ -119,7 +119,6 @@
     <ClCompile Include="AddVelocityAffector.cpp" />
     <ClCompile Include="Affector.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DebugCube.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Emitter.cpp" />
     <ClCompile Include="FadeAffector.cpp" />
@@ -177,7 +176,6 @@
     <ClInclude Include="AddVelocityAffector.h" />
     <ClInclude Include="Affector.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="DebugCube.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Emitter.h" />
     <ClInclude Include="FadeAffector.h" />

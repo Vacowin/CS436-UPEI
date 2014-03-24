@@ -19,6 +19,6 @@ void FadeAffector::Apply(float p_fDelta, Particle* p)
 	}
 	else if(m_eMode == FadeOut)
 	{
-		p->SetFade(1.0f - p->GetAge());
+		p->SetFade(0.95f - p->GetAge());
 	}
 }

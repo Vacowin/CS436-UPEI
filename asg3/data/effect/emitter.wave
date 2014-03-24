@@ -1,0 +1,13 @@
+<Emitter name="wave" texture="wave.tga" num_particles="10"
+	duration="-1" mode="burst" type="constant" burstSpawnNum="10" burstInitTime="0" burstRepeat="true" burstRepeatType="constant" burstRepeatTime="1.0">
+ 
+<!--	<SpawnProperty name="color" type="constant" r="1" g="0.7" b="0.1"/>  -->
+	<SpawnProperty name="color" type="random" startR="0" startG="0" startB="0" endR="1" endG="1" endB="1"/> 
+	<SpawnProperty name="size" type="random" min="0.5" max="8"/>
+	<SpawnProperty name="fade" type="constant" value="1"/>
+	<SpawnProperty name="lifeTime" type="constant" value="0.5" />
+ 
+	<Affector type="scale" chance="1" start="10" end="0"/>
+	<Affector type="fade" chance="1" mode="Out"/>
+  
+</Emitter>
